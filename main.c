@@ -25,9 +25,13 @@ int main() {
             case 2: searchBook(); break;
             case 3: addBook(); break;
             case 4: updateQuantity(); break;
-            case 5: registerMember(); break;
+            case 5: 
+            registerMember(); 
+            break;     
             case 6: viewMembers(); break;
-            case 7: issueBook(); break;
+            case 7: 
+            issueBook(); 
+            break;
             case 8: returnBook(); break;
             case 9: generateInventoryReport("inventory_report.txt"); break;
         }
