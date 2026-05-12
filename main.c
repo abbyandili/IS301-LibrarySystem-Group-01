@@ -21,10 +21,14 @@ int main() {
         scanf("%d", &choice);
 
         switch (choice) {
-            case 1: displayAllBooks(); break;
-            case 2: searchBook(); break;
-            case 3: addBook(); break;
-            case 4: updateQuantity(); break;
+            case 1: displayAllBooks(); 
+            break;
+            case 2: searchBook(); 
+            break;
+            case 3: addBook(); 
+            break;
+            case 4: updateQuantity(); 
+            break;
             case 5: 
             registerMember(); 
             break;     
@@ -32,8 +36,10 @@ int main() {
             case 7: 
             issueBook(); 
             break;
-            case 8: returnBook(); break;
-            case 9: generateInventoryReport("inventory_report.txt"); break;
+            case 8: returnBook(); 
+            break;
+            case 9: generateInventoryReport("inventory_report.txt"); 
+            break;
         }
 
     } while (choice != 10);
