@@ -2,6 +2,7 @@
 #define BOOKS_H
 
 // The blueprint for every book in the system
+// Make sure this structure matches your group's common definition!
 struct Book {
     int bookID;
     char title[100];
