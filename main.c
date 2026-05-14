@@ -6,6 +6,30 @@
 #include "filehandling.h"
 
 int main() {
+    // 1. First, check credentials
+    if (!authenticateAdmin()) {
+        exit(0); // Kill the program if login fails
+    }
+
+    // 2. If successful, proceed to the menu loop
+    int choice;
+    while (1) {
+        printf("\n--- Library Management System ---\n");
+        // ... Display your menu options ...
+        printf("Enter choice: ");
+        scanf("%d", &choice);
+
+        switch (choice) {
+            case 1: displayAllBooks(); break;
+            // ... other cases ...
+            case 9: exit(0);
+            default: printf("Invalid choice.\n");
+        }
+    }
+    return 0;
+}
+
+int main() {
     int choice;
 
     if (!login()) {
