@@ -13,6 +13,13 @@ struct Book {
     char genre[50];
     int yearPublished;
     int quantity;
+    char availabilityStatus[20];
+} Book;
+
+// Function prototype for searching
+void searchBook(Book books[], int totalBooks);
+
+#endif
     char availabilityStatus[20]; // For the Inventory Report requirement
 } Book;
 
