@@ -1,9 +1,9 @@
 #ifndef FILEHANDLING_H
 #define FILEHANDLING_H
 
-#include "books.h" // Ensure this is included to recognize the 'Book' type
+#include <stdio.h>
 
-// Prototype for the inventory report function
-void generateInventoryReport(Book books[], int bookCount);
+FILE* open_file(const char* filename, const char* mode);
+void close_file(FILE* fp);
 
 #endif
