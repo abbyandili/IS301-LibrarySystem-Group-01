@@ -1,6 +1,7 @@
 #ifndef BOOKS_H
 #define BOOKS_H
 
+// The blueprint for every book in the system
 // Make sure this structure matches your group's common definition!
 struct Book {
     int bookID;
@@ -11,9 +12,11 @@ struct Book {
     int quantity;
 };
 
-// Function Prototypes (Your "Promises" to the group)
+// Function Prototypes (The tools available in this branch)
 void displayAllBooks(struct Book library[], int count);
 void updateQuantity(struct Book library[], int count);
-void saveBooksToFile(struct Book library[], int count); // Helper function to save changes
+void saveBooksToFile(struct Book library[], int count);
 
 #endif
+
+
