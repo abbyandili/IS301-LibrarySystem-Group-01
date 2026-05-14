@@ -2,6 +2,7 @@
 #define BOOKS_H
 
 #define MAX_BOOKS 100
+#endif
 
 typedef struct {
     char id[10];
@@ -19,7 +20,6 @@ extern int book_count;
 void add_book(void);
 void load_books(void);
 
-#endif
 // The Book structure based on the project requirements
 typedef struct {
     char bookID[20];       // To store IDs like "001"
