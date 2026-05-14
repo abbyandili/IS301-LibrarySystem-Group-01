@@ -1,34 +1,21 @@
 #ifndef BOOKS_H
 #define BOOKS_H
 
-#define MAX_BOOKS 100
-
-/**
- * The single, unified blueprint for a Book.
- * Matches the format in books.txt: ID, Title, Author, Genre, Year, Qty
- */
 typedef struct {
-    char id[20];           // Supports "001"
+    int id;
     char title[100];
     char author[100];
     char genre[50];
-    int yearPublished;
+    int year;
     int quantity;
-    char status[20];       // "Available" or "Out of Stock"
 } Book;
 
-/* 
-   Function Prototypes 
-   Logic implemented in books.c
-*/
-
-// Section 3: Book Management Requirements
+void loadBooks();
+void saveBooks();
 void displayAllBooks();
 void searchBook();
 void addBook();
 void updateQuantity();
+void generateInventoryReport();
 
-// Utility function for case-insensitive search
-void toLowerCase(char str[]);
-
-#endif /* BOOKS_H */
+#endif
