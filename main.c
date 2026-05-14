@@ -1,9 +1,5 @@
 #include <stdio.h>
 #include "auth.h"
-#include "books.h"
-#include "members.h"
-#include "borrowing.h"
-#include "filehandling.h"
 
 int main() {
     // 1. First, check credentials
