@@ -2,6 +2,16 @@
 #include "auth.h"
 #include "menu.h"
 #include "books.h"
+#include "members.h"
+
+// This actually allocates the memory
+Member members[MAX_MEMBERS]; 
+int memberCount = 0; 
+
+int main() {
+    // Your menu logic here...
+    return 0;
+}
 
 int main() {
     loadBooks();

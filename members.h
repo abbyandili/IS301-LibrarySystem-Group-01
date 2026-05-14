@@ -3,28 +3,21 @@
 
 #define MAX_MEMBERS 100
 
-// The blueprint for every member in the system
 typedef struct {
-    char memberID[10];  // Changed to string for consistency with Book IDs (e.g., "M001")
-    char name[100];
-    char contact[50];
+    int memberID;
+    char name[50];
+    char contact[20];
 } Member;
 
-/* 
-   Function Prototypes 
-   These match the functional requirements in Section 3 
-*/
+// 'extern' means: "This variable exists somewhere else, don't worry about it yet."
+extern Member members[MAX_MEMBERS];
+extern int memberCount;
 
-// Register a new member
-void registerMember();
+// Prototypes for your helper functions
+void printDoubleSep(void);
+void printMember(Member *m);
+void saveMemberToFile(Member m);
+void viewMembers(void);
+void registerMember(void);
 
-// List all registered members
-void viewMembers();
-
-// Search and display details for a specific member
-void viewMemberDetails();
-
-// Update existing member information
-void updateMemberInfo();
-
-#endif /* MEMBERS_H */
+#endif
