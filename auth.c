@@ -16,25 +16,35 @@ int login(void) {
     const char *CORRECT_USER = "admin";
     const char *CORRECT_PASS = "is301dwu";
 
-    printf("\n--- System Login ---\n");
+    // SAFETY: Clear the input buffer before starting login.
+    // This prevents fgets from skipping if there was a newline left by a previous scanf.
+    int c;
+    while ((c = getchar()) != '\n' && c != EOF); 
+
+    printf("\n==============================");
+    printf("\n      ADMINISTRATOR LOGIN");
+    printf("\n==============================");
 
     while (attempts < MAX_ATTEMPTS) {
-        printf("Username: ");
+        printf("\nUsername: ");
         if (fgets(username, sizeof(username), stdin) == NULL) break;
-        username[strcspn(username, "\n")] = 0; // Remove newline
+        username[strcspn(username, "\n")] = 0; // Strip newline
 
         printf("Password: ");
         if (fgets(password, sizeof(password), stdin) == NULL) break;
-        password[strcspn(password, "\n")] = 0; // Remove newline
+        password[strcspn(password, "\n")] = 0; // Strip newline
 
         if (strcmp(username, CORRECT_USER) == 0 && strcmp(password, CORRECT_PASS) == 0) {
-            printf("\nLogin Successful. Welcome to the system.\n");
+            printf("\n[SUCCESS] Welcome, %s.\n", username);
             return 1;
         } else {
             attempts++;
-            printf("Invalid credentials. Attempts remaining: %d\n", MAX_ATTEMPTS - attempts);
+            if (attempts < MAX_ATTEMPTS) {
+                printf("[!] Invalid credentials. %d attempts left.\n", MAX_ATTEMPTS - attempts);
+            }
         }
     }
 
+    printf("\n[ERROR] Too many failed attempts. Access denied.\n");
     return 0;
 }

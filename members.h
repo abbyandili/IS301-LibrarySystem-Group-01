@@ -1,23 +1,30 @@
 #ifndef MEMBERS_H
 #define MEMBERS_H
 
-// Function prototype
-void viewMembers(void);
+#define MAX_MEMBERS 100
 
-// External declarations for the variables used in the function
-extern int memberCount;
-// Assuming Member is your struct name
-extern Member members[]; 
-
-#endif
+// The blueprint for every member in the system
 typedef struct {
-    int memberID;
-    char name[50];
-    char contact[20];
+    char memberID[10];  // Changed to string for consistency with Book IDs (e.g., "M001")
+    char name[100];
+    char contact[50];
 } Member;
 
-// Function Prototypes
-void registerMember();
-void viewMemberDetails(int memberID);
+/* 
+   Function Prototypes 
+   These match the functional requirements in Section 3 
+*/
 
-#endif
+// Register a new member
+void registerMember();
+
+// List all registered members
+void viewMembers();
+
+// Search and display details for a specific member
+void viewMemberDetails();
+
+// Update existing member information
+void updateMemberInfo();
+
+#endif /* MEMBERS_H */

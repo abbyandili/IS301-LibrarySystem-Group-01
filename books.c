@@ -1,204 +1,122 @@
 #include <stdio.h>
 #include <string.h>
+#include <ctype.h>
+#include <stdlib.h>
 #include "books.h"
-#include "filehandling.h" // Needed for save_books()
+#include "filehandling.h"
 
-// Define the actual storage for books
-Book books[MAX_BOOKS];
-int book_count = 0;
+// Assuming these are defined in books.h or a config file
+#define MAX_BOOKS 100
 
-void add_book(void) {
-    if (book_count >= MAX_BOOKS) { 
-        puts("Book catalogue full."); 
-        return; 
+// Utility to convert strings to lowercase for case-insensitive search
+void toLowerCase(char str[]) {
+    for(int i = 0; str[i]; i++) {
+        str[i] = tolower((unsigned char)str[i]);
     }
-    
-    Book b = {0};
-    printf("\n--- Add New Book ---\n");
-    printf("Title  : "); fgets(b.title,  sizeof(b.title),  stdin);
-    printf("Author : "); fgets(b.author, sizeof(b.author), stdin);
-    printf("Year   : "); fgets(b.year,   sizeof(b.year),   stdin);
-    
-    /* strip newlines */
-    b.title[strcspn(b.title,"\n")]   = 0;
-    b.author[strcspn(b.author,"\n")] = 0;
-    b.year[strcspn(b.year,"\n")]     = 0;
+}
 
-    if (strlen(b.title) == 0 || strlen(b.author) == 0) {
-        puts("Title and author cannot be empty."); 
+// FEATURE: Add New Book
+void addBook() {
+    Book books[MAX_BOOKS];
+    int count = 0;
+    loadBooks(books, &count); // Load existing data first
+
+    if (count >= MAX_BOOKS) {
+        printf("\n[!] Error: Book catalogue full.\n");
         return;
     }
 
-    // Assuming generate_id is a utility you've defined elsewhere
-    generate_id("B", book_count + 1, b.id);
-    b.status = 0;
-    books[book_count++] = b;
+    Book b;
+    printf("\n--- Add New Book ---\n");
+    printf("Enter Book ID: "); scanf("%s", b.id);
+    printf("Title: ");         scanf(" %[^\n]", b.title);
+    printf("Author: ");        scanf(" %[^\n]", b.author);
+    printf("Genre: ");         scanf(" %[^\n]", b.genre);
+    printf("Year: ");          scanf("%d", &b.year);
+    printf("Quantity: ");      scanf("%d", &b.quantity);
 
-    save_books(); // Updates the text file immediately
-    printf("Book %s added successfully.\n", b.id);
+    books[count++] = b;
+    saveBooks(books, count); // Persist to file
+    printf("\n[+] Book %s added successfully.\n", b.id);
 }
 
-#include <stdio.h>
-#include <string.h>
-#include <ctype.h>
-#include "books.h"
+// FEATURE: Display All Books
+void displayAllBooks() {
+    Book books[MAX_BOOKS];
+    int count = 0;
+    loadBooks(books, &count);
 
-// Helper function to convert string to lowercase for easier searching
-void toLowerCase(char str[]) {
-    for(int i = 0; str[i]; i++) {
-        str[i] = tolower(str[i]);
+    if (count == 0) {
+        printf("\n[!] Inventory is empty.\n");
+        return;
+    }
+
+    printf("\n%-10s %-25s %-20s %-5s\n", "ID", "Title", "Author", "Qty");
+    printf("------------------------------------------------------------\n");
+    for (int i = 0; i < count; i++) {
+        printf("%-10s %-25.25s %-20.20s %-5d\n", 
+               books[i].id, books[i].title, books[i].author, books[i].quantity);
     }
 }
 
-void searchBook(Book books[], int totalBooks) {
-    char searchTerm[100];
+// FEATURE: Search Book (Case Insensitive)
+void searchBook() {
+    Book books[MAX_BOOKS];
+    int count = 0;
+    loadBooks(books, &count);
+
+    char term[100], lowerTerm[100];
     int found = 0;
 
-    printf("\n--- Search for a Book ---\n");
-    printf("Enter Title or Author: ");
-    scanf(" %[^\n]s", searchTerm); // Reads string with spaces
-
-    char lowerSearch[100];
-    strcpy(lowerSearch, searchTerm);
-    toLowerCase(lowerSearch);
+    printf("\nEnter Title or Author to search: ");
+    scanf(" %[^\n]", term);
+    
+    strcpy(lowerTerm, term);
+    toLowerCase(lowerTerm);
 
     printf("\nSearch Results:\n");
-    printf("------------------------------------------------------------\n");
-
-    for (int i = 0; i < totalBooks; i++) {
+    for (int i = 0; i < count; i++) {
         char tempTitle[100], tempAuthor[100];
         strcpy(tempTitle, books[i].title);
         strcpy(tempAuthor, books[i].author);
-        
         toLowerCase(tempTitle);
         toLowerCase(tempAuthor);
 
-        // Check if search term exists in Title or Author
-        if (strstr(tempTitle, lowerSearch) || strstr(tempAuthor, lowerSearch)) {
-            printf("ID: %s | Title: %s | Author: %s | Qty: %d\n", 
-                   books[i].bookID, books[i].title, books[i].author, books[i].quantity);
+        if (strstr(tempTitle, lowerTerm) || strstr(tempAuthor, lowerTerm)) {
+            printf("[%s] %s by %s (Stock: %d)\n", 
+                   books[i].id, books[i].title, books[i].author, books[i].quantity);
             found++;
         }
     }
-
-    if (found == 0) {
-        printf("No books found matching '%s'.\n", searchTerm);
-    } else {
-        printf("------------------------------------------------------------\n");
-        printf("Total matches found: %d\n", found);
-    }
-}
-#include <stdio.h>
-#include <string.h>
-#include "books.h"
-
-// FEATURE: Display All Books (Carried over from display branch)
-void displayAllBooks(struct Book library[], int count) {
-    if (count == 0) {
-        printf("\n[!] Inventory is empty. Please add books first.\n");
-        return;
-    }
-    printf("\n%-5s %-25s %-20s %-5s\n", "ID", "Title", "Author", "Qty");
-    printf("-----------------------------------------------------------\n");
-    for (int i = 0; i < count; i++) {
-        printf("%-05d %-25.25s %-20.20s %-5d\n", 
-               library[i].bookID, library[i].title, library[i].author, library[i].quantity);
-    }
+    if (!found) printf("No matches found for '%s'.\n", term);
 }
 
-// FEATURE: Update Quantity (The core of this branch)
-void updateQuantity(struct Book library[], int count) {
-    int searchID, newQty, found = 0;
+// FEATURE: Update Quantity
+void updateQuantity() {
+    Book books[MAX_BOOKS];
+    int count = 0;
+    char searchID[10];
+    int newQty, found = 0;
 
-    printf("\nEnter Book ID to update quantity: ");
-    if (scanf("%d", &searchID) != 1) {
-        printf("[!] Error: ID must be a number.\n");
-        while(getchar() != '\n'); 
-        return;
-    }
+    loadBooks(books, &count);
+
+    printf("\nEnter Book ID to update: ");
+    scanf("%s", searchID);
 
     for (int i = 0; i < count; i++) {
-        if (library[i].bookID == searchID) {
+        if (strcmp(books[i].id, searchID) == 0) {
             found = 1;
-            printf("\nFound: %s (Current Qty: %d)\n", library[i].title, library[i].quantity);
-// FEATURE 1: Display All Books
-void displayAllBooks(struct Book library[], int count) {
-    if (count == 0) {
-        printf("\n[!] The library is empty. No books to display.\n");
-        return;
-    }
-
-    printf("\n==================== LIBRARY INVENTORY ====================\n");
-    printf("%-5s %-25s %-20s %-5s\n", "ID", "Title", "Author", "Qty");
-    printf("-----------------------------------------------------------\n");
-
-    for (int i = 0; i < count; i++) {
-        printf("%-05d %-25.25s %-20.20s %-5d\n", 
-               library[i].bookID, 
-               library[i].title, 
-               library[i].author, 
-               library[i].quantity);
-    }
-    printf("===========================================================\n");
-}
-
-// FEATURE 2: Update Quantity
-void updateQuantity(struct Book library[], int count) {
-    int id, newQty, found = 0;
-
-    printf("\nEnter the Book ID to update quantity: ");
-    scanf("%d", &id);
-
-    for (int i = 0; i < count; i++) {
-        if (library[i].bookID == id) {
-            found = 1;
-            printf("Current Quantity for '%s': %d\n", library[i].title, library[i].quantity);
+            printf("Found: %s (Current Qty: %d)\n", books[i].title, books[i].quantity);
             printf("Enter new quantity: ");
-            scanf("%d", &newQty);
-
-            if (newQty < 0) {
-                printf("[!] Error: Quantity cannot be negative.\n");
-            } else {
-                library[i].quantity = newQty;
-                // PERSISTENCE: Save to file immediately after change
-                saveBooksToFile(library, count);
-                printf("[+] Quantity updated and saved to books.txt.\n");
-                printf("[+] Quantity updated successfully!\n");
-                
-                // Save the change to books.txt immediately
-                saveBooksToFile(library, count);
+            if (scanf("%d", &newQty) != 1 || newQty < 0) {
+                printf("[!] Invalid quantity.\n");
+                return;
             }
+            books[i].quantity = newQty;
+            saveBooks(books, count);
+            printf("[+] Quantity updated and saved.\n");
             break;
         }
     }
-    if (!found) printf("[!] Book ID %d not found.\n", searchID);
-}
-
-// HELPER: Save to File (Ensures data is not lost)
-void saveBooksToFile(struct Book library[], int count) {
-    FILE *file = fopen("books.txt", "w");
-    if (file == NULL) {
-        printf("[!] Critical Error: Could not save to books.txt\n");
-        return;
-    }
-
-    if (!found) {
-        printf("[!] Book ID %d not found.\n", id);
-    }
-}
-
-// HELPER: Save to books.txt
-void saveBooksToFile(struct Book library[], int count) {
-    FILE *file = fopen("books.txt", "w");
-    if (file == NULL) {
-        printf("[!] Error: Could not open books.txt for writing.\n");
-        return;
-    }
-
-    for (int i = 0; i < count; i++) {
-        fprintf(file, "%d,%s,%s,%s,%d,%d\n", 
-                library[i].bookID, library[i].title, library[i].author, 
-                library[i].genre, library[i].yearPublished, library[i].quantity);
-    }
-    fclose(file);
+    if (!found) printf("[!] Book ID %s not found.\n", searchID);
 }

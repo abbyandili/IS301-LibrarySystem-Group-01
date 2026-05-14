@@ -1,45 +1,85 @@
 #include <stdio.h>
-#include "books.h"
+#include <string.h>
+#include <stdlib.h>
 #include "filehandling.h"
+#include "books.h"
 
 #define BOOKS_FILE "books.txt"
 
-void load_books(void) {
+// FEATURE: Load books from the text file into an array
+void loadBooks(Book books[], int *count) {
     FILE *fp = fopen(BOOKS_FILE, "r");
     if (!fp) {
-        printf("Error: Could not open %s\n", BOOKS_FILE);
+        // If file doesn't exist, create it and return count 0
+        fp = fopen(BOOKS_FILE, "w");
+        if (fp) fclose(fp);
+        *count = 0;
         return;
     }
 
     char line[256];
-    book_count = 0;
+    int i = 0;
 
-    while (fgets(line, sizeof(line), fp) && book_count < MAX_BOOKS) {
-        Book *b = &books[book_count];
-        // Matches the format: ID|Title|Author|Year|Status
-        if (sscanf(line, "%7[^|]|%99[^|]|%59[^|]|%5[^|]|%d", 
-                   b->id, b->title, b->author, b->year, &b->status) == 5) {
-            book_count++;
+    // Matches format: BookID,Title,Author,Genre,Year,Quantity
+    while (fgets(line, sizeof(line), fp) && i < MAX_BOOKS) {
+        line[strcspn(line, "\n")] = 0; // Remove trailing newline
+        
+        if (strlen(line) < 5) continue; // Skip empty lines
+
+        // Using comma as delimiter per original requirements
+        int parsed = sscanf(line, " %[^,],%[^,],%[^,],%[^,],%d,%d", 
+                            books[i].id, 
+                            books[i].title, 
+                            books[i].author, 
+                            books[i].genre, 
+                            &books[i].yearPublished, 
+                            &books[i].quantity);
+        
+        if (parsed == 6) {
+            i++;
         }
     }
+    *count = i;
     fclose(fp);
-#include <string.h>
-#include "filehandling.h"
+}
 
-void generateInventoryReport(Book books[], int bookCount) {
-    // Open the report file in write mode ("w")
+// FEATURE: Save the current book array back to the text file
+void saveBooks(Book books[], int count) {
+    FILE *fp = fopen(BOOKS_FILE, "w");
+    if (!fp) {
+        printf("[Error] Could not open %s for writing!\n", BOOKS_FILE);
+        return;
+    }
+
+    for (int i = 0; i < count; i++) {
+        fprintf(fp, "%s,%s,%s,%s,%d,%d\n", 
+                books[i].id, 
+                books[i].title, 
+                books[i].author, 
+                books[i].genre, 
+                books[i].yearPublished, 
+                books[i].quantity);
+    }
+    fclose(fp);
+}
+
+// FEATURE: Generate a human-readable inventory report
+void generateInventoryReport() {
+    Book books[MAX_BOOKS];
+    int count = 0;
+    loadBooks(books, &count); // Get latest data
+
     FILE *reportFile = fopen("inventory_report.txt", "w");
-
     if (reportFile == NULL) {
         printf("\n[Error] Could not create the inventory report file!\n");
         return;
     }
 
-    // Header for the report (Optional but looks professional)
-    fprintf(reportFile, "--- LIBRARY INVENTORY REPORT ---\n\n");
+    fprintf(reportFile, "--- LIBRARY INVENTORY REPORT ---\n");
+    fprintf(reportFile, "Generated on: 2026-05-14\n\n");
 
-    for (int i = 0; i < bookCount; i++) {
-        fprintf(reportFile, "BookID: %s\n", books[i].bookID);
+    for (int i = 0; i < count; i++) {
+        fprintf(reportFile, "BookID: %s\n", books[i].id);
         fprintf(reportFile, "Title: %s\n", books[i].title);
         fprintf(reportFile, "Author: %s\n", books[i].author);
         fprintf(reportFile, "Genre: %s\n", books[i].genre);

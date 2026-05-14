@@ -1,37 +1,90 @@
-
 #include <stdio.h>
+#include <stdlib.h>
+#include "auth.h"
 #include "books.h"
+#include "members.h"
+#include "filehandling.h"
 
-void displayMenu(Book books[], int totalBooks) {
+// Helper function to pause the screen for readability
+void pause() {
+    printf("\nPress Enter to continue...");
+    getchar(); // Catch the newline from previous input
+    getchar(); // Wait for user to press Enter
+}
+
+void displayMenu() {
     int choice;
 
     do {
-        printf("\nLibrary Management System\n");
-        printf("1. Display All Books\n");
-        printf("2. Search for a Book\n"); // Your Branch
-        printf("3. Exit\n");
-        printf("Enter choice: ");
-        scanf("%d", &choice);
+        // Optional: clear screen for a cleaner UI (system dependent)
+        // system("cls"); // For Windows
+        // system("clear"); // For Linux/macOS
+
+        printf("\n==========================================");
+        printf("\n      LIBRARY MANAGEMENT SYSTEM");
+        printf("\n==========================================");
+        printf("\n 1. Display All Books");
+        printf("\n 2. Search for a Book");
+        printf("\n 3. Add a New Book");
+        printf("\n 4. Update Book Quantity");
+        printf("\n 5. Register New Member");
+        printf("\n 6. Generate Inventory Report");
+        printf("\n 7. Exit");
+        printf("\n------------------------------------------");
+        printf("\n Enter your choice (1-7): ");
+        
+        if (scanf("%d", &choice) != 1) {
+            printf("\n[!] Invalid input. Please enter a number.\n");
+            // Clear entire buffer if user types text
+            int c;
+            while ((c = getchar()) != '\n' && c != EOF); 
+            continue;
+        }
 
         switch(choice) {
             case 1:
-                // displayAllBooks(books, totalBooks);
+                displayAllBooks();
+                pause();
                 break;
             case 2:
-                searchBook(books, totalBooks); // Calling your new function
+                searchBook();
+                pause();
                 break;
             case 3:
-                printf("Exiting system...\n");
+                addBook();
+                pause();
+                break;
+            case 4:
+                updateQuantity();
+                pause();
+                break;
+            case 5:
+                registerMember();
+                pause();
+                break;
+            case 6:
+                generateInventoryReport();
+                pause();
+                break;
+            case 7:
+                printf("\nExiting system... Goodbye!\n");
                 break;
             default:
-                printf("Invalid choice!\n");
+                printf("\n[!] Invalid choice! Please select 1-7.\n");
+                pause();
         }
-    } while(choice != 3);
+    } while(choice != 7);
 }
-#include "filehandling.h"
 
-// Inside your menu switch-case logic:
-case 5: // Assuming option 5 is Generate Report
-    // Assuming your array is named 'bookList' and your counter is 'totalBooks'
-    generateInventoryReport(bookList, totalBooks);
-    break;
+int main() {
+    // 1. Authenticate first (Make sure login clears its own buffer)
+    if (!login()) {
+        printf("\n[ERROR] Authentication failed. Exiting...\n");
+        return 1;
+    }
+
+    // 2. Start the menu
+    displayMenu();
+
+    return 0;
+}

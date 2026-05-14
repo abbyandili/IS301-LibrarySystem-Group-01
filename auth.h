@@ -1,10 +1,9 @@
-
 #ifndef AUTH_H
 #define AUTH_H
 
 /**
  * Function prototype for the login system.
- * This allows main.c to call the login function defined in auth.c.
+ * Defined in auth.c and used in main.c.
  * 
  * Returns: 1 if authentication is successful, 0 otherwise.
  */
