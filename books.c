@@ -35,6 +35,38 @@ void displayAllBooks() {
     }
 }
 
+void searchBook() {
+    char searchTerm[100];
+    int found = 0;
+
+    printf("\nEnter Title or Author to search: ");
+    getchar(); // Clear the buffer from the menu input
+    fgets(searchTerm, 100, stdin);
+    searchTerm[strcspn(searchTerm, "\n")] = 0; // Remove newline
+
+    printf("\n--- Search Results ---\n");
+    printf("%-5s %-25s %-20s %-5s\n", "ID", "Title", "Author", "Qty");
+    printf("------------------------------------------------------------\n");
+
+    for (int i = 0; i < bookCount; i++) {
+        // strcasestr is a common non-standard extension. 
+        // If it fails to compile, use strstr for case-sensitive search:
+        if (strstr(inventory[i].title, searchTerm) != NULL || 
+            strstr(inventory[i].author, searchTerm) != NULL) {
+            
+            printf("%-5d %-25s %-20s %-5d\n", 
+                   inventory[i].id, inventory[i].title, 
+                   inventory[i].author, inventory[i].quantity);
+            found = 1;
+        }
+    }
+
+    if (!found) {
+        printf("No books found matching '%s'.\n", searchTerm);
+    }
+    printf("------------------------------------------------------------\n");
+}
+
 void addBook() {
     Book b;
     printf("Enter Book ID: "); scanf("%d", &b.id);
@@ -50,6 +82,28 @@ void addBook() {
     printf("Book added successfully!\n");
 }
 
+void updateQuantity() {
+    int id, newQty, found = 0;
+    printf("Enter Book ID to update: ");
+    scanf("%d", &id);
+
+    for (int i = 0; i < bookCount; i++) {
+        if (inventory[i].id == id) {
+            printf("Current Quantity: %d. Enter new Quantity: ", inventory[i].quantity);
+            scanf("%d", &newQty);
+            inventory[i].quantity = newQty;
+            found = 1;
+            break;
+        }
+    }
+
+    if (found) {
+        saveBooks(); // Persist changes to books.txt
+        printf("Quantity updated successfully!\n");
+    } else {
+        printf("Book ID %d not found.\n", id);
+    }
+}
 void generateInventoryReport() {
     FILE *f = fopen("inventory_report.txt", "w");
     for (int i = 0; i < bookCount; i++) {

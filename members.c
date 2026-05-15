@@ -2,24 +2,40 @@
 #include <string.h>
 #include "members.h"
 
-void viewMembers(void) {
-    // ... (Your code from above)
+// 1. ALLOCATE MEMORY: These must be defined here to solve "undefined reference"
+Member members[MAX_MEMBERS]; 
+int memberCount = 0;
+
+// 2. HELPER FUNCTIONS: Implement the functions the linker is looking for
+void printDoubleSep() {
+    printf("============================================\n");
 }
 
-void registerMember(void) {
-    // ... (Your code from above)
+void printMember(Member *m) {
+    printf("  ID: %d\n", m->memberID);
+    printf("  Name: %s\n", m->name);
+    printf("  Contact: %s\n", m->contact);
+    printf("--------------------------------------------\n");
 }
 
-// Ensure members[] and memberCount are declared as 'extern' in members.h
-// and defined in a .c file to avoid "undefined reference" errors.
+void saveMemberToFile(Member m) {
+    FILE *fp = fopen("members.txt", "a"); // 'a' for append
+    if (fp == NULL) {
+        printf("[ERROR] Could not open members.txt for writing.\n");
+        return;
+    }
+    fprintf(fp, "%d,%s,%s\n", m.memberID, m.name, m.contact);
+    fclose(fp);
+}
 
+// 3. MAIN FUNCTIONS
 void viewMembers(void) {
     printDoubleSep();
     printf("           MEMBER LIST\n");
     printDoubleSep();
 
     if (memberCount == 0) {
-        printf("  No members registered.\n");
+        printf("  No members registered in memory.\n");
         return;
     }
 
@@ -31,7 +47,6 @@ void viewMembers(void) {
 }
 
 void registerMember(void) {
-    // Check for array overflow before registering
     if (memberCount >= MAX_MEMBERS) {
         printf("Error: Member limit reached!\n");
         return;
@@ -42,21 +57,20 @@ void registerMember(void) {
     printf("Enter ID: ");
     if (scanf("%d", &newMember.memberID) != 1) {
         printf("Invalid ID input.\n");
-        while(getchar() != '\n'); // Clear buffer
+        while(getchar() != '\n'); 
         return;
     }
 
     printf("Enter Name: ");
-    // %[^\n] consumes the newline; the space before % handles leading whitespace
     scanf(" %[^\n]", newMember.name); 
 
     printf("Enter Contact: ");
-    scanf("%19s", newMember.contact); // Assuming contact buffer is size 20
+    scanf("%19s", newMember.contact); 
 
-    // 1. Save to the persistent file
+    // Save to file
     saveMemberToFile(newMember); 
 
-    // 2. IMPORTANT: Update the in-memory array and counter
+    // Update memory
     members[memberCount] = newMember;
     memberCount++;
 

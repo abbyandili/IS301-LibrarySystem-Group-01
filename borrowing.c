@@ -61,7 +61,7 @@ void returnBook() {
 
         // 4. Update the inventory (Add 1 back to the book quantity)
         // This function should be defined in your books.c
-        updateBookQuantity(searchBookID, 1); 
+        updateQuantity(searchBookID, 1); 
 
         printf("\nSuccess: Book ID %d returned by Member %d.\n", searchBookID, searchMemberID);
     } else {
