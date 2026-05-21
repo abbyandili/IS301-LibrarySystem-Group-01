@@ -18,7 +18,7 @@ void clearScreen() {
 
 int main() {
     // Initial data loading
-    loadBooks();
+    //loadBooks();
     // (Optional: implement a loadMembers() if you want to initialize members data from file)
     
     // User Authentication

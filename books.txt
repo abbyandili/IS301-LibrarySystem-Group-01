@@ -3,3 +3,5 @@
 103, Clean Code, Robert Martin, Software, 2008, 11
 104, Web Development, Megdelene Sigging, IS, 2026, 15
 2345, Harry Potter, J.K.Rowling, Fantasy, 1997, 7
+112, The Great Gatsby, Mary Jane, Historical, 6422264, 4199538
+115, Ulysses, James Joyce, Modernist, 6422264, 4199538
