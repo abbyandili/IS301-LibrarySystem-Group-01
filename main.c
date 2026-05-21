@@ -1,4 +1,3 @@
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <ctype.h> 
@@ -6,7 +5,8 @@
 #include "menu.h"
 #include "books.h"
 #include "members.h"
-#include "borrowing.h" // Added header file link
+#include "borrowing.h"
+#include "filehandling.h" // Added header file link
 
 // Helper function to handle cross-platform screen clearing
 void clearScreen() {
@@ -93,3 +93,4 @@ int main() {
 
     return 0;
 }
+
