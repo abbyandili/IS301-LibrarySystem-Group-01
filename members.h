@@ -1,3 +1,4 @@
+
 #ifndef MEMBERS_H
 #define MEMBERS_H
 
@@ -9,15 +10,14 @@ typedef struct {
     char contact[20];
 } Member;
 
-// 'extern' means: "This variable exists somewhere else, don't worry about it yet."
 extern Member members[MAX_MEMBERS];
 extern int memberCount;
 
-// Prototypes for your helper functions
 void printDoubleSep(void);
 void printMember(Member *m);
 void saveMemberToFile(Member m);
 void viewMembers(void);
 void registerMember(void);
+void updateMemberInfo(void); // Added missing feature prototype
 
 #endif

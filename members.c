@@ -1,12 +1,11 @@
+
 #include <stdio.h>
 #include <string.h>
 #include "members.h"
 
-// 1. ALLOCATE MEMORY: These must be defined here to solve "undefined reference"
 Member members[MAX_MEMBERS]; 
 int memberCount = 0;
 
-// 2. HELPER FUNCTIONS: Implement the functions the linker is looking for
 void printDoubleSep() {
     printf("============================================\n");
 }
@@ -19,7 +18,7 @@ void printMember(Member *m) {
 }
 
 void saveMemberToFile(Member m) {
-    FILE *fp = fopen("members.txt", "a"); // 'a' for append
+    FILE *fp = fopen("members.txt", "a"); 
     if (fp == NULL) {
         printf("[ERROR] Could not open members.txt for writing.\n");
         return;
@@ -28,7 +27,16 @@ void saveMemberToFile(Member m) {
     fclose(fp);
 }
 
-// 3. MAIN FUNCTIONS
+// Function to save completely modified array contents state back to storage file
+void rewriteAllMembersFile() {
+    FILE *fp = fopen("members.txt", "w"); 
+    if (fp == NULL) return;
+    for (int i = 0; i < memberCount; i++) {
+        fprintf(fp, "%d,%s,%s\n", members[i].memberID, members[i].name, members[i].contact);
+    }
+    fclose(fp);
+}
+
 void viewMembers(void) {
     printDoubleSep();
     printf("           MEMBER LIST\n");
@@ -67,12 +75,43 @@ void registerMember(void) {
     printf("Enter Contact: ");
     scanf("%19s", newMember.contact); 
 
-    // Save to file
     saveMemberToFile(newMember); 
 
-    // Update memory
     members[memberCount] = newMember;
     memberCount++;
 
     printf("Member Registered Successfully!\n");
 }
+
+// New requirement integration implementation
+void updateMemberInfo(void) {
+    int targetID, found = 0;
+    printf("\n--- Update Member Information ---\n");
+    printf("Enter Member ID: ");
+    if (scanf("%d", &targetID) != 1) {
+        while(getchar() != '\n');
+        return;
+    }
+
+    for (int i = 0; i < memberCount; i++) {
+        if (members[i].memberID == targetID) {
+            found = 1;
+            printf("Current Name: %s\n", members[i].name);
+            printf("Enter New Name: ");
+            scanf(" %[^\n]", members[i].name);
+
+            printf("Current Contact: %s\n", members[i].contact);
+            printf("Enter New Contact: ");
+            scanf("%19s", members[i].contact);
+            
+            rewriteAllMembersFile();
+            printf("\nSuccess: Member information updated successfully!\n");
+            break;
+        }
+    }
+
+    if (!found) {
+        printf("\nError: Member profile with ID %d was not found in cache.\n", targetID);
+    }
+}
+

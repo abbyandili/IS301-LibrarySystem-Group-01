@@ -1,4 +1,4 @@
- BookID: 101
+BookID: 101
 Title: C Programming
 Author: Dennis Ritchie
 Genre: Technology
@@ -19,7 +19,7 @@ Title: Clean Code
 Author: Robert Martin
 Genre: Software
 Year Published: 2008
-Quantity: 12
+Quantity: 11
 Availability Status: Available
 ----------------------------
 BookID: 104
@@ -28,5 +28,13 @@ Author: Megdelene Sigging
 Genre: IS
 Year Published: 2026
 Quantity: 15
+Availability Status: Available
+----------------------------
+BookID: 2345
+Title: Harry Potter
+Author: J.K.Rowling
+Genre: Fantasy
+Year Published: 1997
+Quantity: 7
 Availability Status: Available
 ----------------------------

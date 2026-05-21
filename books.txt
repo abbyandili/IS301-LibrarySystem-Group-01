@@ -1,4 +1,5 @@
-101,C Programming,Dennis Ritchie,Technology,1972,5
-102,Database Systems,Ramez Elmasri,Technology,2010,8
-103,Clean Code,Robert Martin,Software,2008,12
-104,Web Development,Megdelene Sigging,IS,2026,15
+101, C Programming, Dennis Ritchie, Technology, 1972, 4
+102, Database Systems, Ramez Elmasri, Technology, 2010, 8
+103, Clean Code, Robert Martin, Software, 2008, 11
+104, Web Development, Megdelene Sigging, IS, 2026, 15
+2345, Harry Potter, J.K.Rowling, Fantasy, 1997, 7
